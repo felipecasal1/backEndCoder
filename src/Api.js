@@ -1,6 +1,11 @@
 import express from "express";
+import fs from "node:fs/promises";
+import path, { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import ProductManager from "./product/productManager.js";
+import cartsManager from "./carts/cartsManager.js";
+
 
 const app = express()
 const PORT = 8080;
@@ -9,6 +14,14 @@ const PORT = 8080;
 
 
 app.use(express.json());
+
+
+
+
+const cartsPath = path.join(
+    dirname(fileURLToPath(import.meta.url)),
+    "./carts/carts.json"
+);
 
 
 
@@ -73,6 +86,68 @@ app.delete("/api/products/:id", async (req, res) => {
     }
 })
 
+
+
+
+
+// ----------------- crea un crrito nuevo -----------------------
+
+app.get("/api/carts", async (req, res) => {
+    await cartsManager.addCart();
+    res.send(await cartsManager.getCarts());
+});
+
+//------------------ agrega un producto al carrito --------------------
+app.post("/api/carts/:cid/products/:pid", async (req, res) => {
+    let objCart = [];
+    objCart.push(await cartsManager.getCarts());
+    let objProducts = [];
+    objProducts.push(await ProductManager.getProducts());
+
+    const cid = parseInt(req.params.cid);
+    const pid = parseInt(req.params.pid);
+
+    const newItem = {
+        id: pid,
+        quantity: 1,
+    };
+
+    const cart = objCart[0].find((cart) => cart.id === cid);
+
+    if (!cart) {
+        res.status(404).json({ error: "Carrito no encontrado" });
+        res.send("carrito no encontrado")
+    } else {
+        const product = objProducts[0].find((product) => product.id === pid);
+        if (!product) {
+            res.status(404).json({ error: "Producto no encontrado" });
+        } else {
+            const item = cart.products.find((item) => item.id === pid);
+            if (item) {
+                item.quantity++;
+            } else {
+                cart.products.push(newItem);
+            }
+            await fs.writeFile(cartsPath, JSON.stringify(objCart[0], null, 2));
+            res.json(cart);
+        }
+    }
+});
+
+
+//------------------- Carrito -------------------
+
+//----------------------- acceder al carrito por ID ------------------------
+app.get("/api/carts/:cid", async (req, res) => {
+    const cid = parseInt(req.params.cid);
+
+    if (cartsManager.getCartById(cid)) {
+        res.json(await cartsManager.getCartById(cid));
+    } else {
+        res.status(404).json({ error: "Carrito no encontrado" });
+        res.send("carrito no encontrado")
+    }
+});
 
 
 
