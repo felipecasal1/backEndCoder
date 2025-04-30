@@ -1,11 +1,44 @@
 [
   {
     "id": 1,
-    "products": []
+    "products": [
+      {
+        "id": 4,
+        "quantity": 1
+      },
+      {
+        "id": 2,
+        "quantity": 4
+      },
+      {
+        "id": 5,
+        "quantity": 1,
+        "title": "producto 4",
+        "description": "descripcion 4",
+        "code": "abc6113",
+        "price": 1003,
+        "status": true,
+        "stock": 13,
+        "thumbnail": "url"
+      }
+    ]
   },
   {
     "id": 2,
-    "products": []
+    "products": [
+      {
+        "name": "producto",
+        "id": 4,
+        "quantity": 2,
+        "title": "producto 4",
+        "description": "descripcion 4",
+        "code": "abc6113",
+        "price": 1003,
+        "status": true,
+        "stock": 13,
+        "thumbnail": "url"
+      }
+    ]
   },
   {
     "id": 3,
@@ -45,6 +78,18 @@
   },
   {
     "id": 12,
+    "products": []
+  },
+  {
+    "id": 13,
+    "products": []
+  },
+  {
+    "id": 14,
+    "products": []
+  },
+  {
+    "id": 15,
     "products": []
   }
 ]

@@ -68,7 +68,17 @@ class cartsManager {
             if (productIndex !== -1) {
                 carts[cartIndex].products[productIndex].quantity++;
             } else {
-                carts[cartIndex].products.push({ id: pid, quantity: 1 });
+                carts[cartIndex].products.push({ 
+                "id": pid,
+                "quantity": 1,
+                "title": ptitle,
+                "description": pdescription,
+                "code": pcode,
+                "price": pprice,
+                "status": pstatus,
+                "stock": pstock,
+                "thumbnail": pthumbnail
+                });
             }
             await fs.writeFile(this.#cartsPath, JSON.stringify(carts, null, 2));
         }

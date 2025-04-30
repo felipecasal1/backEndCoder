@@ -5,13 +5,20 @@
   "type": "module",
   "start": "nodeman Api.js",
   "main": "index.js",
+  "engines": {
+    "node": "^14.17.0",
+    "npm": "^10.2.4"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node  src/Api.js",
+    "dev": "nodemon Api.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "express-handlebars": "^8.0.3"
   }
 }

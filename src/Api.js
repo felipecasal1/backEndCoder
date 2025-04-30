@@ -1,20 +1,29 @@
+import http from "node:http";
 import express from "express";
+import hbs from "express-handlebars";
 import fs from "node:fs/promises";
 import path, { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import ProductManager from "./product/productManager.js";
 import cartsManager from "./carts/cartsManager.js";
+import e from "express";
 
 
 const app = express()
 const PORT = 8080;
-
-
+const httpServer = http
 
 
 app.use(express.json());
 
+app.engine("handlebars", hbs.engine())
+
+app.set("views", import.meta.dirname + "/views");
+app.engine("handlebars", hbs.engine());
+app.set("view engine", "handlebars"); // Cambia "views engine" por "view engine"
+app.set("views", path.join(dirname(fileURLToPath(import.meta.url)), "/views")); // Configura correctamente la ruta de las vistas
+app.use(express.static(import.meta.dirname + "/views"));
 
 
 
@@ -32,8 +41,16 @@ app.get("/api", (req, res) => {
 
 //acceder a la lista de productos
 app.get("/api/products", async (req, res) => {
-    res.send(await ProductManager.getProducts())
+    
+    let products = await ProductManager.getProducts()
+    res.render("index", { products });
+
 })
+
+app.get("/api/info ", async (req, res) => {
+
+})
+
 
 //acceder a un producto por id
 app.get("/api/products/:id", async (req, res) => {
@@ -103,15 +120,22 @@ app.post("/api/carts/:cid/products/:pid", async (req, res) => {
     objCart.push(await cartsManager.getCarts());
     let objProducts = [];
     objProducts.push(await ProductManager.getProducts());
-
+    
     const cid = parseInt(req.params.cid);
     const pid = parseInt(req.params.pid);
 
     const newItem = {
         id: pid,
         quantity: 1,
+        title: objProducts[0].find((product) => product.id === pid).title,
+        description: objProducts[0].find((product) => product.id === pid).description,
+        code: objProducts[0].find((product) => product.id === pid).code,
+        price: objProducts[0].find((product) => product.id === pid).price,
+        status: objProducts[0].find((product) => product.id === pid).status,
+        stock: objProducts[0].find((product) => product.id === pid).stock,
+        thumbnail: objProducts[0].find((product) => product.id === pid).thumbnail,  
     };
-
+    
     const cart = objCart[0].find((cart) => cart.id === cid);
 
     if (!cart) {
