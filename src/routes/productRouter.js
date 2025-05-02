@@ -46,31 +46,16 @@ router.put("/api/products/:id", async (req, res) => {
 })
 
 //eliminar un producto por id
-// router.delete("/api/products/:id", async (req, res) => {
-//     const id = parseInt(req.params.id)
-//     const product = await ProductManager.getProductById(id)
-//     if (product) {
-//         await ProductManager.deleteProduct(id)
-//         res.send("producto eliminado")
-//     } else {
-//         res.status(404).send("producto no encontrado")
-//     }
-// })
 router.delete("/api/products/:id", async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const result = await ProductManager.deleteProductById(Number(id));
-        if (result) {
-            res.status(200).send({ message: "Producto eliminado correctamente" });
-        } else {
-            res.status(404).send({ error: "Producto no encontrado" });
-        }
-    } catch (error) {
-        console.error("Error al eliminar el producto:", error);
-        res.status(500).send({ error: "Error interno del servidor" });
+    const id = parseInt(req.params.id)
+    const product = await ProductManager.getProductById(id)
+    if (product) {
+        await ProductManager.deleteProduct(id)
+        res.send("producto eliminado")
+    } else {
+        res.status(404).send("producto no encontrado")
     }
-});
+})
 
 
 
