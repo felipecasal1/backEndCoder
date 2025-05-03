@@ -7,7 +7,7 @@ class cartsManager {
     //----------- Paths ----------------
     static #cartsPath = path.join(
         dirname(fileURLToPath(import.meta.url)),
-        "./carts.json"
+        "../data/carts.json"
     );
 
 

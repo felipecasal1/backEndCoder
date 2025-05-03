@@ -20,16 +20,6 @@
     "thumbnail": "url"
   },
   {
-    "id": 3,
-    "title": "producto 3",
-    "description": "descripcion 3",
-    "code": "abc123",
-    "price": 100,
-    "status": false,
-    "stock": 1,
-    "thumbnail": "url"
-  },
-  {
     "id": 4,
     "title": "producto 4",
     "description": "descripcion 4",
@@ -48,5 +38,32 @@
     "status": true,
     "stock": 13,
     "thumbnail": "url"
+  },
+  {
+    "id": 6,
+    "title": "1",
+    "description": "2",
+    "code": "3",
+    "price": 4,
+    "stock": 5,
+    "category": "6"
+  },
+  {
+    "id": 7,
+    "title": "4",
+    "description": "1",
+    "code": "2",
+    "price": 4,
+    "stock": 5,
+    "category": "6"
+  },
+  {
+    "id": 8,
+    "title": "hola ",
+    "description": "soy el nuevo producto ",
+    "code": "13",
+    "price": 21,
+    "stock": 9,
+    "category": "nuevo"
   }
 ]

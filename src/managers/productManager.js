@@ -4,15 +4,14 @@ import path, { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 class ProductManager {
+    constructor(filePath) {
+        this.path = path.resolve(filePath);
+    }
+;
 
-    //paths _llamada a la carpeta de los productos 
-    static #productsPath = path.join(
-        dirname(fileURLToPath(import.meta.url)),
-        "./dataProducts.json");
-
-    static async readDocument() {
+    async readDocument() {
         try {
-            const data = await fs.readFile(this.#productsPath, "utf-8");
+            const data = await fs.readFile(this.path, "utf-8");
             return JSON.parse(data);
         } catch (error) {
             console.error("Error leyendo los documentos", error);
@@ -20,10 +19,10 @@ class ProductManager {
         }
     }
 
-    static async writeDocument(data) {
+    async writeDocument(data) {
         const dataString = JSON.stringify(data, null, 2);
         try {
-            await fs.writeFile(this.#productsPath, dataString);
+            await fs.writeFile(this.path, dataString);
             console.log("Documento escrito correctamente");
         } catch {
             console.error({ error: "Error writing products file" });
@@ -32,7 +31,7 @@ class ProductManager {
 
 
     // traer el listado de productos
-    static async getProducts() {
+    async getProducts() {
         try {
             const data = await this.readDocument()
             console.log("se leccionaron los productos");
@@ -45,14 +44,14 @@ class ProductManager {
 
 
     // acceder a un producto por id
-    static async getProductById(id) {
+    async getProductById(id) {
         const products = await this.getProducts();
         const product = products.find((p) => p.id === id);
         return product;
     }
 
     //creacion de un producto
-    static async addProduct(product) {
+    async addProduct(product) {
         const {
             title,
             description,
@@ -82,7 +81,7 @@ class ProductManager {
     }
 
     //actualizar un producto por id
-    static async updateProduct(id, updatedProduct) {
+    async updateProduct(id, updatedProduct) {
         const {
             title,
             description,
@@ -103,7 +102,7 @@ class ProductManager {
     }
 
 
-    static async deleteProduct(id) {
+    async deleteProduct(id) {
         const products = await this.getProducts();
         const productIndex = products.findIndex((product) => product.id == id);
         if (productIndex !== -1) {

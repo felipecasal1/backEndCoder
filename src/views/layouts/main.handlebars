@@ -6,28 +6,12 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>bienvenidos a la verduleria On-Line en modo desarrollador</h1>
-    <h2>Lista de productos</h2>
-    {{#if products}}
-        <ul>
-            {{#each products}}
-                <li>{{this.title}}</li>
-                <button type="button" data-id="{{data.id}}">Eliminar Producto</button>
-            {{/each}}
-        </ul>
-    {{else}}
-        <p>No hay productos disponibles</p>
-    {{/if}}
-
-    <form>
-
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" required>
-        <button type="submit">Agregar producto</button>
-
-    </form>
-
+        <header>
+        <h1>Verduleria On Line</h1>
+    </header>
+    <main>
+        {{{body}}}
+    </main>
 
 </body>
-
 </html>

@@ -11,9 +11,11 @@ import { fileURLToPath } from "node:url";
 
 import productsRouter from "./routes/productRouter.js";
 import cartsRouter from "./routes/cartsRouter.js";
+import viewsRouter from "./routes/viewsRouter.js";
 
-import ProductManager from "./product/productManager.js";
-import cartsManager from "./carts/cartsManager.js";
+
+import ProductManager from "./managers/productManager.js";
+import CartsManager from "./managers/cartsManager.js";
 
 
 
@@ -22,54 +24,95 @@ const PORT = 8080;
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Configurar carpeta pública para archivos estáticos
+app.use(express.static(path.join(__dirname, "public")));
+
 app.use(express.json());
 
+//cofiguracion de handlebars
 app.engine("handlebars", hbs.engine())
-
-app.set("views", import.meta.dirname + "/views");
-app.engine("handlebars", hbs.engine());
-app.set("view engine", "handlebars"); // Cambia "views engine" por "view engine"
-app.set("views", path.join(dirname(fileURLToPath(import.meta.url)), "/views")); // Configura correctamente la ruta de las vistas
-app.use(express.static(path.join(dirname(fileURLToPath(import.meta.url)), "public")));
+app.set("views", path.join(dirname(fileURLToPath(import.meta.url)), "views"));
+app.set("view engine", "handlebars"); 
 
 
-let messages = [] //array para guardar los mensajes de los usuarios
-io.on("connection", (socket) => {
-    console.log("nuevo cliente conectado")
+// Middleware para hacer que io esté disponible en las rutas
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
+app.get("/", (req, res) => {
+    res.render("index"); // Renderiza index.handlebars
+});
 
-    socket.on("message", (data) => {
-        console.log("mensaje recivido : ",data)
-        messages.push(data)
-        io.emit("message", {
-            socketId: socket.id,
-            messages: data
-        })
-    })
-})
+app.get("/realtimeproducts", async (req, res) => {
+    const productos = await productManager.getProducts(); // Obtén los productos
+    res.render("realTimeProducts", { productos }); // Renderiza realTimeProducts.handlebars con datos
+});
 
-//pagina principal
-app.get("/api", (req, res) => {
-    res.send("bienvenido a la api")
-})
+app.get("/home", async (req, res) => {
+    const productos = await productManager.getProducts(); // Obtén los productos
+    res.render("home", { productos }); // Renderiza home.handlebars con datos
+});
 
-app.get("/chat", (req, res) => {
-    res.sendFile(path.join(dirname(fileURLToPath(import.meta.url)), "/public/index.html"))
-})
+const productManager = new ProductManager("./data/products.json");
+const cartManager = new CartsManager('./data/carts.json');
 
-app.use("/", productsRouter); // Usa el router de productos
+// Pasar productManager a productRouter para actualizaciones en tiempo real
+app.use('/api/products', productsRouter(productManager, io));
+app.use('/api/carts', cartsRouter(cartManager));
 
+io.on('connection', (socket) => {
+    console.log('Cliente conectado');
 
-
-app.use("/", cartsRouter); // Usa el router de productos
-
-
-
-
-
-
+    socket.on('disconnect', () => {
+        console.log('Cliente desconectado');
+    });
+});        
 
 
 httpServer.listen(PORT, () => {
-    console.log("servidor escuchando en el puerto " + PORT + " y en el socket " + io.path())
+    console.log("servidor escuchando en el puerto " + PORT )
 })
+
+
+
+// app.set("views", path.join(dirname(fileURLToPath(import.meta.url)), "/views")); // Configura correctamente la ruta de las vistas
+// app.use(express.static(path.join(dirname(fileURLToPath(import.meta.url)), "public")));
+
+
+
+
+// let messages = [] //array para guardar los mensajes de los usuarios
+
+// io.on("connection", (socket) => { //escucha la conexion de un cliente
+//     console.log("nuevo cliente conectado")
+
+//     socket.on("message", (data) => { //escucha el mensaje del cliente
+//         console.log("mensaje recivido : ",data)
+//         messages.push(data)
+//         io.emit("messageEmitidoServidor", {
+//             socketId: socket.id,    
+//             message: data
+//         })
+//     })
+// })
+
+// app.get("/chat", (req, res) => {
+//     res.sendFile(path.join(dirname(fileURLToPath(import.meta.url)), "/public/index.html"))    
+// })
+
+
+
+
+// //pagina principal
+// app.get("/api", (req, res) => {
+//     res.send("bienvenido a la api")    
+// })
+
+
+
+
 
