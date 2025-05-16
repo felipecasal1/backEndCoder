@@ -2,6 +2,9 @@ import http from "node:http";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import express from "express";
+import dotenv from "dotenv";
+dotenv.config();
+
 
 import hbs from "express-handlebars";
 import fs from "node:fs/promises";
@@ -20,7 +23,7 @@ import CartsManager from "./managers/cartsManager.js";
 
 
 const app = express()
-const PORT = 8080;
+const PORT = process.env.PORT ;
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
