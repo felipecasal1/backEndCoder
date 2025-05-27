@@ -1,8 +1,14 @@
-<h1>Lista de Productos</h1>
+<h1>Productos en Stock</h1>
+
 <ul>
-    {{#each productos}}
-        <li>
-            <strong>{{this.title}}</strong> - {{this.description}} - ${{this.price}} (Stock: {{this.stock}})
-        </li>
-    {{/each}}
+  {{#each products}}
+    <li>
+      <strong>{{title}}</strong> - ${{price}}
+      <form action="/cart/add/{{_id}}" method="POST" style="display:inline;">
+        <button type="submit">Agregar al carrito</button>
+      </form>
+    </li>
+  {{/each}}
 </ul>
+
+<a href="/cart">Ver carrito</a>
