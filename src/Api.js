@@ -4,7 +4,7 @@ import { Server } from "socket.io";
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
-
+import mongoose from "mongoose";
 
 import hbs from "express-handlebars";
 import fs from "node:fs/promises";
@@ -12,13 +12,17 @@ import fs from "node:fs/promises";
 import path, { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import productsRouter from "./routes/productRouter.js";
+
 import cartsRouter from "./routes/cartsRouter.js";
 import viewsRouter from "./routes/viewsRouter.js";
+import productsRouter from "./routes/productRouter.js";
 
 
 import ProductManager from "./managers/productManager.js";
 import CartsManager from "./managers/cartsManager.js";
+
+
+
 
 
 
@@ -27,6 +31,12 @@ const PORT = process.env.PORT ;
 const httpServer = createServer(app);
 const io = new Server(httpServer);
 
+
+const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/tuDB";
+mongoose
+    .connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log("Conectado a MongoDB"))
+    .catch((error) => console.error("Error conectando a MongoDB:", error));
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -40,6 +50,10 @@ app.engine("handlebars", hbs.engine())
 app.set("views", path.join(dirname(fileURLToPath(import.meta.url)), "views"));
 app.set("view engine", "handlebars"); 
 
+
+
+const productManager = new ProductManager("./data/products.json");
+const cartManager = new CartsManager('./data/carts.json');
 
 // Middleware para hacer que io esté disponible en las rutas
 app.use((req, res, next) => {
@@ -59,9 +73,6 @@ app.get("/home", async (req, res) => {
     const productos = await productManager.getProducts(); // Obtén los productos
     res.render("home", { productos }); // Renderiza home.handlebars con datos
 });
-
-const productManager = new ProductManager("./data/products.json");
-const cartManager = new CartsManager('./data/carts.json');
 
 // Pasar productManager a productRouter para actualizaciones en tiempo real
 app.use('/api/products', productsRouter(productManager, io));

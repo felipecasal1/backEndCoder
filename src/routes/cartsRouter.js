@@ -4,6 +4,7 @@ import express from 'express';
 const router = express.Router();
 
 export default function cartRouter(cartManager) {
+    
     router.post('/', async (req, res) => {
         const carrito = await cartManager.createCart();
         res.send({ mensaje: 'Carrito creado', carrito });
