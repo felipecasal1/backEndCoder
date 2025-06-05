@@ -8,21 +8,13 @@ class ProductManager {
 
 
     // Traer productos desde MongoDB
-    async getProducts() {
-        try {
-            const products = await productModel.find();
-            console.log("Se trajeron los productos desde db ");
-            return products;
-        } catch (error) {
-            console.error("Error consultando la BD:", error);
-            return [];
-        }
-    }
+
     //Agregar productos desde mongoDB
         async addProduct(product) {
         try {
             // Crea un nuevo documento
             const nuevoProducto = new productModel(product);
+            
             await nuevoProducto.save();
             console.log("Se añadió un nuevo producto");
             return nuevoProducto;
