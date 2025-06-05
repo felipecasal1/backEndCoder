@@ -1,0 +1,23 @@
+<h1>{{product.title}}</h1>
+
+<p><strong>Descripción:</strong> {{product.description}}</p>
+<p><strong>Precio:</strong> ${{product.price}}</p>
+<p><strong>Categoría:</strong> {{product.category}}</p>
+<p><strong>Stock:</strong> {{product.stock}}</p>
+<p><strong>Disponible:</strong> {{#if product.status}}✅ Sí{{else}}❌ No{{/if}}</p>
+
+{{#if product.thumbnails.length}}
+  <p><strong>Imágenes:</strong></p>
+  <ul>
+    {{#each product.thumbnails}}
+      <li><img src="{{this}}" alt="thumbnail" width="150" /></li>
+    {{/each}}
+  </ul>
+{{/if}}
+
+<form method="POST" action="/api/carts/1/product/{{product.id}}?_method=POST">
+  <button type="submit">Agregar al carrito</button>
+</form>
+
+<br />
+<a href="/products">⬅️ Volver al listado</a>

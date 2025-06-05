@@ -6,32 +6,15 @@ import productModel from '../models/product.model.js';
 
 console.log("productRouter cargado");
 
-router.get('/', async (req, res) => {
-    try{    
-        const productos = await  productModel.find();
-        res.status(200).send({ productos });
-        console.log("Se trajeron los productos desde db:", { productos });
-    } catch (error) {
-        console.error("Error al obtener productos:", error);
-        res.status(500).send({ error: 'Error al obtener productos' });
-    }
-})
+
+
 
 export default router;
 
-// export default function productRouter(productManager, io) {
-//     router.get('/', async (req, res) => {
-//         const productos = await productManager.getProducts();
-//         res.send({ productos });
-//     });
 
 
-//     router.get('/:pid', async (req, res) => {
-//         const pid = parseInt(req.params.pid);
-//         const producto = await productManager.getProductById(pid);
-//         if (!producto) return res.status(404).send({ error: 'Producto no encontrado' });
-//         res.send({ producto });
-//     });
+
+
 
 
 //     router.post('/', async (req, res) => {
