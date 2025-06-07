@@ -1,9 +1,10 @@
 <h1>Lista de Productos</h1>
 <ul>
 
-    {{#each productos }}
+    {{#each product }}
         <li>
             <strong>{{title}}</strong> - {{description}} - ${{price}} (Stock: {{stock}})
         </li>
+        <a href="/api/products/{{_id}}">Ir al detalle del producto</a>
     {{/each}}
 </ul>

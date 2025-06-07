@@ -6,18 +6,10 @@
 <p><strong>Stock:</strong> {{product.stock}}</p>
 <p><strong>Disponible:</strong> {{#if product.status}}✅ Sí{{else}}❌ No{{/if}}</p>
 
-{{#if product.thumbnails.length}}
-  <p><strong>Imágenes:</strong></p>
-  <ul>
-    {{#each product.thumbnails}}
-      <li><img src="{{this}}" alt="thumbnail" width="150" /></li>
-    {{/each}}
-  </ul>
-{{/if}}
 
-<form method="POST" action="/api/carts/1/product/{{product.id}}?_method=POST">
+<form>
   <button type="submit">Agregar al carrito</button>
 </form>
 
 <br />
-<a href="/products">⬅️ Volver al listado</a>
+<a href="/api/products">⬅️ Volver al listado</a>
