@@ -3,8 +3,9 @@
 import express from 'express';
 const router = express.Router();
 import productModel from '../models/product.model.js';
+import cartSchema from '../models/cart.model.js';
 
-
+//crear un nuevo producto 
 router.post("/", async (req, res) => {
   try {
     const product = await productModel.create(req.body);
@@ -14,6 +15,21 @@ router.post("/", async (req, res) => {
     res.status(500).json({ status: "error", message: "Error al crear el producto" });
   }
 });
+
+
+// traer todos los productos
+router.get("/", async (req, res) => {
+  try {
+    const product = await productModel.find().lean()
+
+    res.render("home", {product})
+  } catch (error) {
+    console.error("no se a podido traer el producto error:", error);
+    res.status(500).json({ status: "error", message: "Error al traer todos los productos" });
+  }
+});
+
+//traer un producto por id
 router.get("/:pid", async (req, res) => {
   try {
     const product = await productModel.findById(req.params.pid).lean()
@@ -25,16 +41,8 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
-  try {
-    const product = await productModel.find().lean()
-    res.render("home", {product})
-  } catch (error) {
-    console.error("no se a podido traer el producto error:", error);
-    res.status(500).json({ status: "error", message: "Error al traer todos los productos" });
-  }
-});
 
+// editar un producto por id
 router.put("/:pid", async (req, res) => {
   try {
     const updatedProduct = await productModel.findByIdAndUpdate(
@@ -54,6 +62,7 @@ router.put("/:pid", async (req, res) => {
   }
 });
 
+//eliminar un producto por id 
 router.delete("/:pid", async(req,res) =>{
   try{
     const product = await productModel.findByIdAndDelete(req.params.pid).lean();

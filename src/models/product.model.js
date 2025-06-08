@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import mongoosePaginate from "mongoose-paginate-v2"
 
 const productSchema = new mongoose.Schema({
     id:Number,
@@ -34,6 +34,8 @@ const productSchema = new mongoose.Schema({
         unique: true, // Asegura que el código sea único
     },
 });
+
+productSchema.plugin(mongoosePaginate)
 
 const productModel = mongoose.model("products", productSchema);
 

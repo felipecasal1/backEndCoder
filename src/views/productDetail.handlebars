@@ -7,9 +7,10 @@
 <p><strong>Disponible:</strong> {{#if product.status}}✅ Sí{{else}}❌ No{{/if}}</p>
 
 
-<form>
+<form method="POST" action="/api/carts/6844bd6806d9247ca9fd9c07/products/{{product._id}}?_method=POST">
   <button type="submit">Agregar al carrito</button>
 </form>
-
 <br />
 <a href="/api/products">⬅️ Volver al listado</a>
+<br>
+<a href="/api/carts/6844bd6806d9247ca9fd9c07">Ir a tu carrito</a>

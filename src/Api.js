@@ -14,7 +14,6 @@ import path, { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import cartsRouter from "./routes/cartsRouter.js";
-import viewsRouter from "./routes/viewsRouter.js";
 import productsRouter from "./routes/productRouter.js";
 
 
@@ -49,12 +48,15 @@ app.set("view engine", "handlebars");
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-//Routers para /home
+app.use(methodOverride("_method"));
 
 
 // Ruta para renderizar home con productos y botón para agregar al carrito
+
 app.use("/home" ,productsRouter)
+
+
+
 // Routers para products y carts
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
@@ -85,11 +87,7 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
     console.log("Nuevo cliente conectado");
 
-    socket.on("newProduct", async (productData) => {
-        await productModel.create(productData);
-        const products = await productModel.find().lean();
-        io.emit("productsUpdated", products);
-    });
+    
 
     socket.on("deleteProduct", async (id) => {
         await productModel.findByIdAndDelete(id);
