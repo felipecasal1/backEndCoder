@@ -35,6 +35,14 @@ const productSchema = new mongoose.Schema({
     },
 });
 
+mongoosePaginate.paginate.options = {
+    customLabels: {
+        offset: false,
+        page:"currentPage",
+        pagingCounter:false,
+        totalDocs:false
+    }
+}
 productSchema.plugin(mongoosePaginate)
 
 const productModel = mongoose.model("products", productSchema);

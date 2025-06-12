@@ -5,6 +5,8 @@ const router = express.Router();
 import productModel from '../models/product.model.js';
 import cartSchema from '../models/cart.model.js';
 
+const PATH = "http://localhost:8080/api/products"
+
 //crear un nuevo producto 
 router.post("/", async (req, res) => {
   try {
@@ -20,9 +22,32 @@ router.post("/", async (req, res) => {
 // traer todos los productos
 router.get("/", async (req, res) => {
   try {
-    const product = await productModel.find().lean()
 
-    res.render("home", {product})
+    const {page} = req.query;
+    const product = await productModel.paginate({},{page, limit:10})
+
+
+    let prevLink =null;
+    let nextLink =null;
+
+    if(product.hasPrevPage){
+      prevLink = `${PATH}/?page=${product.prevPage}`}
+
+    if(product.hasNextPage){ 
+    nextLink = `${PATH}/?page=${product.nextPage}`}
+
+
+    delete product.offset
+    product.status = "success"
+    product.prevLink = prevLink;
+    product.nextLink = nextLink;
+
+
+      let productNew = product.docs
+      
+      console.log(product)
+      res.render("home", {product})
+
   } catch (error) {
     console.error("no se a podido traer el producto error:", error);
     res.status(500).json({ status: "error", message: "Error al traer todos los productos" });
@@ -72,6 +97,8 @@ router.delete("/:pid", async(req,res) =>{
     res.status(500).json({ status: "error", message: "Error al eliminar el producto" });
   }
 })
+
+
 export default router;
 
 

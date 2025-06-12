@@ -41,9 +41,27 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 //cofiguracion de handlebars
-app.engine("handlebars", hbs.engine())
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "handlebars");
+// app.engine("handlebars", hbs.engine())
+ app.set("views", path.join(__dirname, "views"));
+ app.set("view engine", "handlebars");
+
+app.engine(
+  "handlebars",
+  engine({
+    // Aquí es donde agregas las opciones para controlar el acceso a prototipos
+    runtimeOptions: {
+      allowProtoPropertiesByDefault: true, // Permitir acceso a propiedades del prototipo
+      allowProtoMethodsByDefault: true,    // Permitir acceso a métodos del prototipo (si tuvieras)
+    },
+    helpers: {
+      // Tus helpers existentes
+      multiply: (a, b) => a * b,
+      sumTotal: (products) => {
+        return products.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
+      }
+    },
+  })
+);
 
 // Middlewares
 app.use(express.json());
@@ -60,6 +78,7 @@ app.use("/home" ,productsRouter)
 // Routers para products y carts
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
+
 
 
 

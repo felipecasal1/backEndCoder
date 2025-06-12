@@ -4,8 +4,8 @@
 <ul id="productsList">
   {{#each cart.products}}
   <li>
-    <strong>{{product.title}}</strong> - ${{product.price}}
-    <form>
+    <strong>{{product.title}}</strong> - ${{product.price}} x {{quantity}} = ${{multiply product.price quantity}}
+    <form action="/api/carts/6844bd6806d9247ca9fd9c07/products/{{product._id}}?_method=DELETE" method="POST"
       style="display:inline;">
       <button type="submit">Eliminar</button>
     </form>
@@ -15,7 +15,7 @@
 <hr />
 
 <!-- Formulario para vaciar carrito -->
-<form action="/api/carts/{{cart._id}}?_method=DELETE" method="POST">
+<form action="/api/carts/6844bd6806d9247ca9fd9c07?_method=DELETE" method="POST">
   <button type="submit">Vaciar carrito</button>
 </form>
 <a href="/api/products">Seguir comprando</a>
@@ -30,11 +30,15 @@
   const socket = io();
   socket.on("cartUpdated", (updatedCart) => {
     console.log("Carrito actualizado recibido:", updatedCart);
+
+
     console.log(updatedCart._id)
+
+
     // Reconstruye el HTML de la lista de productos.
     let html = "";
-    if (updatedCart.products && updatedCart.products.length > 0) 
-      updatedCart.products.forEach(p => {
+    if (updatedCart.products && updatedCart.products.length > 0) {
+      updatedCart.products.forEach(p =>  {
         html += `<li>
                   <strong>${p.product.title}</strong> - $${p.product.price}
                   <form action="/api/carts/6844bd6806d9247ca9fd9c07/products/${p.product._id}?_method=DELETE" method="POST" style="display:inline;">
@@ -48,4 +52,5 @@
     // Actualiza el contenido del <ul> con id "productsList".
     document.getElementById("productsList").innerHTML = html;
   });
+
 </script>
