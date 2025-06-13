@@ -1,7 +1,7 @@
 <h1>Lista de Productos</h1>
 <ul>
 
-    {{#each product.docs }}
+    {{#each productNew }}
         <li>
             <strong>{{title}}</strong> - {{description}} - ${{price}} (Stock: {{stock}})
         </li>
@@ -11,11 +11,23 @@
 </ul>
 
 <div>
-  {{#if product.hasPrevPage}}
-    <a href="{{product.prevLink}}">Página Anterior</a>
+  {{#if hasPrevPage}}
+    <a href="{{prevLink}}">Página Anterior</a>
   {{/if}}
-  <span>Página {{product.currentPage}} de {{product.totalPages}}</span>
-  {{#if product.hasNextPage}}
-    <a href="{{product.nextLink}}">Página Siguiente</a>
+  <span>Página {{product.currentPage}} de {{totalPages}}</span>
+  {{#if hasNextPage}}
+    <a href="{{nextLink}}">Página Siguiente</a>
   {{/if}}
+
+</div>
+<div class="controls">
+    <form action="/api/products" method="GET">
+        <label for="sort">Ordenar por:</label>
+        <select name="sort" id="sort" onchange="this.form.submit()">
+            <option value="">Sin orden</option>
+            <option value="price_asc" {{#if (eq currentSort 'price_asc')}}selected{{/if}}>Precio Ascendente</option>
+            <option value="price_desc" {{#if (eq currentSort 'price_desc')}}selected{{/if}}>Precio Descendente</option>
+        </select>
+
+    </form>
 </div>

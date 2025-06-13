@@ -23,30 +23,73 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
 
-    const {page} = req.query;
-    const product = await productModel.paginate({},{page, limit:10})
+      const {
+      page = 1,
+      limit = 10,
+      category,
+      sort,
+      query
+    } = req.query;
 
 
-    let prevLink =null;
-    let nextLink =null;
+  
+    const options = {
+      page: parseInt(page),
+      limit: parseInt(limit),
+      lean:true,
+    };
 
-    if(product.hasPrevPage){
-      prevLink = `${PATH}/?page=${product.prevPage}`}
+if (sort === 'price_asc') {
+      options.sort = { price: 1 }; // 1 para ascendente
+    } else if (sort === 'price_desc') {
+      options.sort = { price: -1 }; // -1 para descendente
+    }
 
-    if(product.hasNextPage){ 
-    nextLink = `${PATH}/?page=${product.nextPage}`}
 
+    const product = await productModel.paginate({}, options);
+    console.log(options)
+  
+  
+    const currentLimit = options.limit; 
+    const currentSort = sort || ''; // Si no hay sort, que sea una cadena vacía
+  
+    let prevlink = null;
+    if (product.hasPrevPage) {
+        prevlink = `${PATH}?page=${product.prevPage}&limit=${currentLimit}`;
+        if (currentSort) prevlink += `&sort=${currentSort}`;
+    }
+
+    let nextlink = null;
+    if (product.hasNextPage) {
+        nextlink = `${PATH}?page=${product.nextPage}&limit=${currentLimit}`;
+        if (currentSort) nextlink += `&sort=${currentSort}`;
+    }
 
     delete product.offset
-    product.status = "success"
-    product.prevLink = prevLink;
-    product.nextLink = nextLink;
 
+ let productNew = product.docs; // Tus productos actuales
 
-      let productNew = product.docs
-      
-      console.log(product)
-      res.render("home", {product})
+ console.log(product.currentPage)
+    // console.log para depuración (opcional, ya sabes que los títulos salen aquí)
+    // productNew.forEach(e => console.log(e.title));
+
+    // Renderizar la vista home con los datos
+    res.render("home", {
+      productNew, // Tus productos paginados
+      // Propiedades de paginación para la plantilla
+      totalPages: product.totalPages,
+      currentPage: product.page,
+      hasPrevPage: product.hasPrevPage,
+      hasNextPage: product.hasNextPage,
+      prevPage: product.prevPage,
+      nextPage: product.nextPage,
+      prevLink: prevlink, // Links ya construidos con sort y query
+      nextLink: nextlink,
+      // Puedes pasar el 'sort' y 'query' actual si los necesitas para inputs en el HTML
+      currentSort: currentSort,
+      product
+    });
+
 
   } catch (error) {
     console.error("no se a podido traer el producto error:", error);
