@@ -58,7 +58,7 @@ app.engine(
       multiply: (a, b) => a * b,
       sumTotal: (products) => {
         return products.reduce((acc, item) => acc + item.product.price * item.quantity, 0);
-      }
+      },
     },
   })
 );

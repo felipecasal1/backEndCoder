@@ -102,7 +102,9 @@ router.get("/:pid", async (req, res) => {
   try {
     const product = await productModel.findById(req.params.pid).lean()
     console.log("el producto traido es:", product)
-    res.render("productDetail", {product})
+    res.render("productDetail", {
+      product,
+    })
   } catch (error) {
     console.error("no se a podido crear el producto error:", error);
     res.status(500).json({ status: "error", message: "Error al crear el producto" });

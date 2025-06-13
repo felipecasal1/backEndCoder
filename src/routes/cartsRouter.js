@@ -109,6 +109,7 @@ router.delete("/:cid/products/:pid", async (req, res) => {
 
     cart.products = cart.products.filter(p => !p.product.equals(pid));
     await cart.save();
+    await cart.populate("products.product");
 
      // Emite el evento con el carrito actualizado.
     const io = req.app.get("io");

@@ -12,6 +12,7 @@
   </li>
   {{/each}}
 </ul>
+  <p><strong>Total:</strong> $<span id="total">{{sumTotal cart.products}}</span></p>
 <hr />
 
 <!-- Formulario para vaciar carrito -->
@@ -29,10 +30,16 @@
 
   const socket = io();
   socket.on("cartUpdated", (updatedCart) => {
-    console.log("Carrito actualizado recibido:", updatedCart);
 
 
-    console.log(updatedCart._id)
+let total = 0;
+    if(updatedCart.products && updatedCart.products.length > 0) {
+      total = updatedCart.products.reduce((acc, item) => {
+        return acc + (item.product.price * item.quantity);
+      }, 0);
+    }
+    // Actualiza el HTML del total
+    document.getElementById("total").innerText = total;
 
 
     // Reconstruye el HTML de la lista de productos.
@@ -40,7 +47,8 @@
     if (updatedCart.products && updatedCart.products.length > 0) {
       updatedCart.products.forEach(p =>  {
         html += `<li>
-                  <strong>${p.product.title}</strong> - $${p.product.price}
+                  <strong>${p.product.title}</strong> - $${p.product.price}x ${p.quantity} = $${p.product.price * p.quantity}
+                
                   <form action="/api/carts/6844bd6806d9247ca9fd9c07/products/${p.product._id}?_method=DELETE" method="POST" style="display:inline;">
                   <button type="submit">Eliminar</button>
                   </form>
