@@ -8,8 +8,8 @@
     "engines":{"node":"^14.17.0","npm":"^10.2.4"},
     "scripts":
     {
-    "dev":"npx nodemon Api.js",
-    "test":"nodemon Api.js",
-    "start": "node Api.js"
+    "dev":"npx nodemon app.js",
+    "test":"nodemon app.js",
+    "start": "node app.js"
     },
     "keywords":[],"author":"","license":"ISC","dependencies":{"@tailwindcss/vite":"^4.1.12","cookie-parser":"^1.4.7","dotenv":"^16.5.0","express":"^5.1.0","express-handlebars":"^8.0.3","method-override":"^3.0.0","mongoose":"^8.15.1","mongoose-paginate-v2":"^1.9.1","nodemon":"^3.1.10","socket":"^0.15.57","socket.io":"^4.8.1"}}
