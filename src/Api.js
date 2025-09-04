@@ -7,8 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import mongoose from "mongoose";
 import { engine } from "express-handlebars";
-import hbs from "express-handlebars";
-import fs from "node:fs/promises";
+
 
 import path, { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -18,8 +17,6 @@ import productsRouter from "./routes/productRouter.js";
 
 
 import methodOverride from "method-override";
-import cookieParser from "cookie-parser";
-import cartSchema from "./models/cart.model.js";
 import productModel from "./models/product.model.js"
 
 
@@ -89,7 +86,7 @@ const httpServer = app.listen(8080, () => {
 
 // Configuración del servidor HTTP y Socket.IO
 const io = new Server(httpServer);
-app.set("io", io);
+app.set("io", io);  
 
 
 
